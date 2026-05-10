@@ -2,8 +2,7 @@
 const TILE  = 24;
 const COLS  = 26;
 const ROWS  = 26;
-const SIDE  = 160;
-const CW    = COLS * TILE + SIDE;   // 784
+const CW    = COLS * TILE;          // 624
 const CH    = ROWS * TILE;          // 624
 
 const EMPTY = 0, BRICK = 1, STEEL = 2, WATER = 3, TREES = 4, ICE = 5, BASE = 6;
@@ -511,78 +510,37 @@ class Game {
       ctx.fillRect(0, 0, COLS * TILE, CH);
     }
 
-    // Sidebar
-    this._drawSidebar(ctx);
+    // HUD overlay
+    this._drawHUD();
 
     // Intro overlay
     if (this.state === S_INTRO) this._drawIntro(ctx);
     if (this.state === S_PAUSE) this._drawPause(ctx);
   }
 
-  _drawSidebar(ctx) {
-    const sx = COLS * TILE;
-    ctx.fillStyle = '#222';
-    ctx.fillRect(sx, 0, SIDE, CH);
+  }
 
-    ctx.fillStyle = '#ffcc00';
-    ctx.font = 'bold 14px monospace';
-    ctx.textAlign = 'center';
-    ctx.fillText('坦克大战', sx + SIDE / 2, 30);
-
-    ctx.fillStyle = '#aaa';
-    ctx.font = '11px monospace';
-    ctx.fillText('SCORE', sx + SIDE / 2, 55);
+  _drawHUD() {
+    const ctx = this.ctx;
+    ctx.fillStyle = 'rgba(0,0,0,0.65)';
+    ctx.fillRect(0, 0, CW, 24);
+    ctx.font = 'bold 12px monospace';
+    ctx.textBaseline = 'middle';
+    const cy = 12;
     ctx.fillStyle = '#fff';
-    ctx.font = 'bold 16px monospace';
-    ctx.fillText(String(this.score).padStart(6, '0'), sx + SIDE / 2, 72);
-
-    ctx.fillStyle = '#aaa';
-    ctx.font = '11px monospace';
-    ctx.fillText('HI-SCORE', sx + SIDE / 2, 95);
+    ctx.textAlign = 'left';
+    ctx.fillText(String(this.score).padStart(6, '0'), 8, cy);
     ctx.fillStyle = '#ff8';
-    ctx.font = 'bold 16px monospace';
-    ctx.fillText(String(this.hiScore).padStart(6, '0'), sx + SIDE / 2, 112);
-
-    ctx.fillStyle = '#aaa';
-    ctx.font = '11px monospace';
-    ctx.fillText(`STAGE ${this.level + 1}`, sx + SIDE / 2, 140);
-
-    // Lives
-    ctx.fillStyle = '#aaa';
-    ctx.font = '11px monospace';
-    ctx.fillText('LIVES', sx + SIDE / 2, 165);
-    ctx.fillStyle = '#ffcc00';
-    ctx.font = 'bold 18px monospace';
-    ctx.fillText('♥ × ' + this.player.lives, sx + SIDE / 2, 185);
-
-    // Enemy remaining
-    ctx.fillStyle = '#aaa';
-    ctx.font = '11px monospace';
-    ctx.fillText('ENEMY', sx + SIDE / 2, 215);
-    const remaining = this.enemies.length + this.enemyQueue.length;
-    const cols2 = 4;
-    for (let i = 0; i < Math.min(remaining, 20); i++) {
-      const ex = sx + 20 + (i % cols2) * 30;
-      const ey = 230 + Math.floor(i / cols2) * 22;
-      ctx.fillStyle = '#f88';
-      ctx.fillRect(ex, ey, 18, 14);
-      ctx.fillStyle = '#000';
-      ctx.fillRect(ex + 7, ey - 4, 4, 5);
-    }
-
-    // Controls hint
-    ctx.fillStyle = '#555';
-    ctx.font = '10px monospace';
     ctx.textAlign = 'center';
-    ctx.fillText('WASD/方向键 移动', sx + SIDE / 2, CH - 65);
-    ctx.fillText('空格/J 射击', sx + SIDE / 2, CH - 50);
-    ctx.fillText('P 暂停', sx + SIDE / 2, CH - 35);
-
-    // Audio indicators
-    ctx.fillStyle = this.audio.musicEnabled ? '#0f0' : '#f00';
-    ctx.fillText('M 音乐 ' + (this.audio.musicEnabled ? 'ON' : 'OFF'), sx + SIDE / 2, CH - 20);
-    ctx.fillStyle = this.audio.sfxEnabled ? '#0f0' : '#f00';
-    ctx.fillText('N 音效 ' + (this.audio.sfxEnabled ? 'ON' : 'OFF'), sx + SIDE / 2, CH - 5);
+    ctx.fillText('HI:' + String(this.hiScore).padStart(6, '0'), CW * 0.35, cy);
+    ctx.fillStyle = '#adf';
+    ctx.fillText('ST:' + (this.level + 1), CW * 0.55, cy);
+    ctx.fillStyle = '#ffcc00';
+    ctx.fillText('♥×' + this.player.lives, CW * 0.72, cy);
+    ctx.fillStyle = '#f88';
+    ctx.textAlign = 'right';
+    ctx.fillText('E:' + (this.enemies.length + this.enemyQueue.length), CW - 8, cy);
+    ctx.textBaseline = 'alphabetic';
   }
 
   _drawMenu() {

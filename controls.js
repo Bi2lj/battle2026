@@ -24,7 +24,7 @@
     if (isLandscape) {
       scale = Math.min((vw - 160) / canvas.width, vh / canvas.height);
     } else {
-      scale = Math.min(vw / canvas.width, (vh - 160) / canvas.height);
+      scale = Math.min(vw / canvas.width, (vh - 200) / canvas.height);
     }
     scale = Math.min(scale, 1);
 
