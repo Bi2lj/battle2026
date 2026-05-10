@@ -22,21 +22,27 @@
 
     let scale;
     if (isLandscape) {
-      // 横屏：控制器在右侧，宽约 160px
-      const ctrlW = 160;
-      scale = Math.min((vw - ctrlW) / canvas.width, vh / canvas.height);
+      scale = Math.min((vw - 160) / canvas.width, vh / canvas.height);
     } else {
-      // 竖屏：控制器在下方，高约 160px
-      const ctrlH = 160;
-      scale = Math.min(vw / canvas.width, (vh - ctrlH) / canvas.height);
+      scale = Math.min(vw / canvas.width, (vh - 160) / canvas.height);
     }
     scale = Math.min(scale, 1);
 
-    wrap.style.width     = canvas.width  + 'px';
-    wrap.style.height    = canvas.height + 'px';
-    wrap.style.transform = `scale(${scale})`;
+    // 关键：wrapper 设为缩放后的尺寸，canvas 用 transform 缩放
+    const sw = Math.floor(canvas.width  * scale);
+    const sh = Math.floor(canvas.height * scale);
+    wrap.style.width    = sw + 'px';
+    wrap.style.height   = sh + 'px';
+    wrap.style.overflow = 'hidden';
+    canvas.style.transform       = `scale(${scale})`;
+    canvas.style.transformOrigin = 'top left';
 
     if (overlay) {
+      overlay.style.width  = sw + 'px';
+      overlay.style.height = sh + 'px';
+      // overlay 内的按钮坐标是基于原始 canvas 尺寸的，需要同步缩放
+      overlay.style.transform       = `scale(${scale})`;
+      overlay.style.transformOrigin = 'top left';
       overlay.style.width  = canvas.width  + 'px';
       overlay.style.height = canvas.height + 'px';
     }
