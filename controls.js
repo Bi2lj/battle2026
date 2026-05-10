@@ -14,33 +14,21 @@
     const wrap    = document.getElementById('canvas-wrap');
     const canvas  = document.getElementById('gameCanvas');
     const overlay = document.getElementById('menu-overlay');
-    if (!canvas) return;
+    if (!canvas || !canvas.width) return;
 
-    const isLandscape = window.innerWidth > window.innerHeight;
-    const vw = window.innerWidth;
-    const vh = window.innerHeight;
+    const availW = wrap.clientWidth  || window.innerWidth;
+    const availH = wrap.clientHeight || (window.innerHeight - 220);
 
-    let scale;
-    if (isLandscape) {
-      scale = Math.min((vw - 160) / canvas.width, vh / canvas.height);
-    } else {
-      scale = Math.min(vw / canvas.width, (vh - 200) / canvas.height);
-    }
-    scale = Math.min(scale, 1);
-
-    // 关键：wrapper 设为缩放后的尺寸，canvas 用 transform 缩放
+    const scale = Math.min(availW / canvas.width, availH / canvas.height, 1);
     const sw = Math.floor(canvas.width  * scale);
     const sh = Math.floor(canvas.height * scale);
-    wrap.style.width    = sw + 'px';
-    wrap.style.height   = sh + 'px';
-    wrap.style.overflow = 'hidden';
-    canvas.style.transform       = `scale(${scale})`;
-    canvas.style.transformOrigin = 'top left';
+
+    // CSS scaling: canvas visually shrinks but keeps internal resolution
+    canvas.style.width  = sw + 'px';
+    canvas.style.height = sh + 'px';
+    canvas.style.transform = '';
 
     if (overlay) {
-      overlay.style.width  = sw + 'px';
-      overlay.style.height = sh + 'px';
-      // overlay 内的按钮坐标是基于原始 canvas 尺寸的，需要同步缩放
       overlay.style.transform       = `scale(${scale})`;
       overlay.style.transformOrigin = 'top left';
       overlay.style.width  = canvas.width  + 'px';
@@ -85,6 +73,7 @@
   }
 
   waitForGame(game => {
+    scaleCanvas(); // canvas.width is now set by Game constructor
     const dpad  = document.getElementById('dpad');
     const shoot = document.getElementById('btn-shoot');
 

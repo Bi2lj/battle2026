@@ -29,9 +29,13 @@
     }
 
     #canvas-wrap {
-      flex-shrink: 0;
-      transform-origin: top left;
+      flex: 1;
       position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
     }
 
     #gameCanvas {
@@ -63,15 +67,15 @@
       justify-content: space-around;
       width: 100%;
       padding: 16px 20px;
-      flex: 1;
       flex-shrink: 0;
+      height: 220px;
     }
 
     /* 横屏时控制器竖排在右侧 */
     @media (orientation: landscape) {
       #controls {
         flex-direction: column;
-        width: auto;
+        width: 200px;
         height: 100%;
         padding: 12px 8px;
         gap: 12px;
