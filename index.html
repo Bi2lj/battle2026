@@ -14,28 +14,41 @@
       touch-action: none;
     }
 
-    #app {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      width: 100vw;
-      height: 100vh;
-    }
-
-    /* 横屏时改为左右布局 */
-    @media (orientation: landscape) {
-      #app { flex-direction: row; justify-content: center; align-items: center; }
-    }
-
+    /* 竖屏：canvas 区在上，控制器固定在底部 */
     #canvas-wrap {
-      flex: 1;
-      position: relative;
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      bottom: 220px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      min-height: 0;
+    }
+
+    #controls {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 220px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-around;
+      padding: 16px 20px;
+    }
+
+    /* 横屏：canvas 区在左，控制器固定在右侧 */
+    @media (orientation: landscape) {
+      #canvas-wrap {
+        top: 0; left: 0; right: 200px; bottom: 0;
+      }
+      #controls {
+        top: 0; left: auto; right: 0; bottom: 0;
+        width: 200px; height: 100%;
+        flex-direction: column;
+        padding: 12px 8px;
+        gap: 12px;
+        justify-content: center;
+      }
     }
 
     #gameCanvas {
@@ -57,30 +70,6 @@
       color: #000;
       font: bold 16px monospace;
       cursor: pointer;
-    }
-
-    /* ── 控制器 ── */
-    #controls {
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      justify-content: space-around;
-      width: 100%;
-      padding: 16px 20px;
-      flex-shrink: 0;
-      height: 220px;
-    }
-
-    /* 横屏时控制器竖排在右侧 */
-    @media (orientation: landscape) {
-      #controls {
-        flex-direction: column;
-        width: 200px;
-        height: 100%;
-        padding: 12px 8px;
-        gap: 12px;
-        justify-content: center;
-      }
     }
 
     /* D-pad */
@@ -109,10 +98,10 @@
       border-color: #ffcc00;
       color: #ffcc00;
     }
-    #btn-up    { top: 0;    left: 54px; }
+    #btn-up    { top: 0;     left: 54px; }
     #btn-down  { top: 108px; left: 54px; }
-    #btn-left  { top: 54px; left: 0; }
-    #btn-right { top: 54px; left: 108px; }
+    #btn-left  { top: 54px;  left: 0; }
+    #btn-right { top: 54px;  left: 108px; }
     #dpad::after {
       content: '';
       position: absolute;
@@ -166,26 +155,24 @@
   </style>
 </head>
 <body>
-  <div id="app">
-    <div id="canvas-wrap">
-      <canvas id="gameCanvas"></canvas>
-      <div id="menu-overlay"></div>
+  <div id="canvas-wrap">
+    <canvas id="gameCanvas"></canvas>
+    <div id="menu-overlay"></div>
+  </div>
+
+  <div id="controls">
+    <div id="dpad">
+      <div class="dpad-btn" id="btn-up">▲</div>
+      <div class="dpad-btn" id="btn-left">◀</div>
+      <div class="dpad-btn" id="btn-right">▶</div>
+      <div class="dpad-btn" id="btn-down">▼</div>
     </div>
 
-    <div id="controls">
-      <div id="dpad">
-        <div class="dpad-btn" id="btn-up">▲</div>
-        <div class="dpad-btn" id="btn-left">◀</div>
-        <div class="dpad-btn" id="btn-right">▶</div>
-        <div class="dpad-btn" id="btn-down">▼</div>
-      </div>
-
-      <div id="right-btns">
-        <div id="btn-shoot">射击</div>
-        <div id="aux-btns">
-          <div class="aux-btn" id="btn-pause">暂停</div>
-          <div class="aux-btn" id="btn-music">音乐</div>
-        </div>
+    <div id="right-btns">
+      <div id="btn-shoot">射击</div>
+      <div id="aux-btns">
+        <div class="aux-btn" id="btn-pause">暂停</div>
+        <div class="aux-btn" id="btn-music">音乐</div>
       </div>
     </div>
   </div>

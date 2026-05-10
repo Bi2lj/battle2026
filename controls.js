@@ -16,7 +16,6 @@
     if (!canvas || !canvas.width) return;
 
     const isLandscape = window.innerWidth > window.innerHeight;
-    // Available space: subtract controls area from viewport
     const availW = isLandscape ? window.innerWidth - 200 : window.innerWidth;
     const availH = isLandscape ? window.innerHeight      : window.innerHeight - 220;
 
@@ -26,7 +25,6 @@
 
     canvas.style.width  = sw + 'px';
     canvas.style.height = sh + 'px';
-    canvas.style.transform = '';
 
     if (overlay) {
       overlay.style.transform       = `scale(${scale})`;
