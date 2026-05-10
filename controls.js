@@ -11,34 +11,34 @@
 
   // ── 画布缩放 ────────────────────────────────────────────────────────────────
   function scaleCanvas() {
-    const wrap = document.getElementById('canvas-wrap');
-    const canvas = document.getElementById('gameCanvas');
-    const controls = document.getElementById('controls');
+    const wrap    = document.getElementById('canvas-wrap');
+    const canvas  = document.getElementById('gameCanvas');
+    const overlay = document.getElementById('menu-overlay');
     if (!canvas) return;
 
+    const isLandscape = window.innerWidth > window.innerHeight;
     const vw = window.innerWidth;
     const vh = window.innerHeight;
 
-    // 控制器固定宽度
-    const ctrlW = 160;
-    const availW = vw - ctrlW;
-    const availH = vh;
+    let scale;
+    if (isLandscape) {
+      // 横屏：控制器在右侧，宽约 160px
+      const ctrlW = 160;
+      scale = Math.min((vw - ctrlW) / canvas.width, vh / canvas.height);
+    } else {
+      // 竖屏：控制器在下方，高约 160px
+      const ctrlH = 160;
+      scale = Math.min(vw / canvas.width, (vh - ctrlH) / canvas.height);
+    }
+    scale = Math.min(scale, 1);
 
-    const scaleX = availW / canvas.width;
-    const scaleY = availH / canvas.height;
-    const scale  = Math.min(scaleX, scaleY, 1); // 不放大，只缩小
-
-    wrap.style.width  = canvas.width  + 'px';
-    wrap.style.height = canvas.height + 'px';
+    wrap.style.width     = canvas.width  + 'px';
+    wrap.style.height    = canvas.height + 'px';
     wrap.style.transform = `scale(${scale})`;
 
-    // 更新 menu-overlay 尺寸与 canvas 一致
-    const overlay = document.getElementById('menu-overlay');
     if (overlay) {
       overlay.style.width  = canvas.width  + 'px';
       overlay.style.height = canvas.height + 'px';
-      overlay.style.top  = '0';
-      overlay.style.left = '0';
     }
   }
 
