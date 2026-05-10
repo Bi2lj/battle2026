@@ -11,19 +11,19 @@
 
   // ── 画布缩放 ────────────────────────────────────────────────────────────────
   function scaleCanvas() {
-    const wrap    = document.getElementById('canvas-wrap');
     const canvas  = document.getElementById('gameCanvas');
     const overlay = document.getElementById('menu-overlay');
     if (!canvas || !canvas.width) return;
 
-    const availW = wrap.clientWidth  || window.innerWidth;
-    const availH = wrap.clientHeight || (window.innerHeight - 220);
+    const isLandscape = window.innerWidth > window.innerHeight;
+    // Available space: subtract controls area from viewport
+    const availW = isLandscape ? window.innerWidth - 200 : window.innerWidth;
+    const availH = isLandscape ? window.innerHeight      : window.innerHeight - 220;
 
     const scale = Math.min(availW / canvas.width, availH / canvas.height, 1);
     const sw = Math.floor(canvas.width  * scale);
     const sh = Math.floor(canvas.height * scale);
 
-    // CSS scaling: canvas visually shrinks but keeps internal resolution
     canvas.style.width  = sw + 'px';
     canvas.style.height = sh + 'px';
     canvas.style.transform = '';
@@ -38,7 +38,6 @@
 
   window.addEventListener('resize', scaleCanvas);
   window.addEventListener('orientationchange', () => setTimeout(scaleCanvas, 300));
-  window.addEventListener('load', scaleCanvas);
 
   // ── D-pad 触控 ──────────────────────────────────────────────────────────────
   const KEY_MAP = {
